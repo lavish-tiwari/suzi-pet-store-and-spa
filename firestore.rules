@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Check if the user is authenticated and listed in the "admins" collection
+    function isAdmin() {
+      return request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.token.email.lower()));
+    }
+
+    // Public appointment booking: anyone can create. Read/update/delete restricted to admins
+    match /appointments/{appointmentId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Restrict access to inventory, logs, and administrator lists to verified admins only
+    match /inventory/{item} {
+      allow read, write: if isAdmin();
+    }
+    match /inventory_logs/{log} {
+      allow read, write: if isAdmin();
+    }
+    match /admins/{adminEmail} {
+      allow read: if request.auth != null && request.auth.token.email.lower() == adminEmail.lower();
+      allow write: if isAdmin() || adminEmail == "admin@suzi.com";
+    }
+    
+    // Public contact message submissions: anyone can send message
+    match /contact_messages/{messageId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Public gallery access
+    match /gallery/{itemId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Public reviews access
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Customer tracking rules
+    match /customers/{phone} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+    match /counters/{counterId} {
+      allow read, write: if false;
+    }
+  }
+}

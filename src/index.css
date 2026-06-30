@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-puppy-cream text-puppy-emphasis transition-colors duration-500;
+  }
+  
+  html.dark body {
+    @apply bg-puppy-darkbg text-puppy-cream;
+  }
+}
+
+/* Custom Nav link center-expanding underlines */
+.nav-underline {
+  position: relative;
+}
+.nav-underline::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: currentColor;
+  transform-origin: bottom center;
+  transition: transform 0.25s ease-out;
+}
+.nav-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* Custom scrollbars matching puppy theme colors */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-puppy-peach/30 rounded-full border-4 border-transparent bg-clip-padding hover:bg-puppy-peach/50 transition-colors;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  @apply bg-puppy-highlight/30 rounded-full border-4 border-transparent bg-clip-padding hover:bg-puppy-highlight/50 transition-colors;
+}
+
+/* Custom animated class for floating ambient elements */
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float 9s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 8s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+/* Shimmer animation keyframes for CTA button glow */
+@keyframes shimmerSweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-shimmer-sweep {
+  animation: shimmerSweep 3s infinite linear;
+}
+
+/* Pulsing glow animation for CTA buttons */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 214, 176, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 6px rgba(255, 214, 176, 0.7);
+  }
+}
+@keyframes pulseGlowDark {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(255, 174, 99, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 20px 8px rgba(255, 174, 99, 0.5);
+  }
+}
+.animate-pulse-glow {
+  animation: pulseGlow 4s infinite ease-in-out;
+}
+html.dark .animate-pulse-glow {
+  animation: pulseGlowDark 4s infinite ease-in-out;
+}
